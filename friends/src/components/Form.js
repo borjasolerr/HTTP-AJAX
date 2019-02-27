@@ -3,7 +3,7 @@ import React from 'react';
 export default function Form() {
   return (
     <div>
-      <form>
+      <form action="" method="post">
         Name: <input type="text" />
         Age: <input type="number" />
         Email: <input type="email" />

@@ -1,5 +1,6 @@
 import React from 'react';
 import axios from 'axios';
+import PropTypes from 'prop-types';
 
 export default class Friends extends React.Component {
   state = {
@@ -41,9 +42,19 @@ export default class Friends extends React.Component {
                 </div>
               );
             })}
+
           {!this.state.friends && <div>Loading friends...</div>}
         </div>
       </div>
     );
   }
 }
+
+Friends.propTypes = {
+  friends: PropTypes.shape({
+    id: PropTypes.number,
+    name: PropTypes.string,
+    age: PropTypes.number,
+    email: PropTypes.string
+  })
+};
