@@ -9,3 +9,16 @@ button {
   background: white;
   padding: 0.25rem 0.5rem;
 }
+
+.people {
+  display: flex;
+  justify-content: center;
+  font-size: 1.2rem;
+  margin: 20px;
+}
+
+.people span {
+  font-weight: bold;
+  color: red;
+  margin: 0 14px;
+}
