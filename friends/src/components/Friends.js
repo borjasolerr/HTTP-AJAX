@@ -1,60 +1,77 @@
 import React from 'react';
+import './Friends.css';
 import axios from 'axios';
-import PropTypes from 'prop-types';
 
 export default class Friends extends React.Component {
-  state = {
-    friends: null,
-    error: null,
-    loading: false
-  };
-
-  componentDidMount() {
-    this.fetchFriends();
+  constructor() {
+    super();
+    this.state = {
+      friends: [],
+      name: '',
+      age: '',
+      email: ''
+    };
   }
-
-  fetchFriends = () => {
+  componentDidMount() {
     axios
       .get('http://localhost:5000/friends')
-      .then(res => this.addFriends(res.data))
-      .catch(res => this.addError(res.message));
+      .then(res => {
+        this.setState({
+          friends: res.data
+        });
+      })
+      .catch(err => console.log(err));
+  }
+  submit = e => {
+    e.preventDefault();
+    axios
+      .post('http://localhost:5000/friends', {
+        name: this.state.name,
+        age: this.state.age,
+        email: this.state.email
+      })
+      .then(res => {
+        this.setState({ friends: res.data });
+      })
+      .catch(err => console.log(err));
   };
-  addFriends = friends => {
-    this.setState({ friends: friends });
+  name = e => {
+    this.setState({
+      name: e.target.value
+    });
   };
-
-  addError = error => {
-    this.setState({ error: error });
+  age = e => {
+    if (typeof e.target.value !== 'number') {
+      this.setState({
+        age: e.target.value
+      });
+    }
   };
-
+  email = e => {
+    this.setState({
+      email: e.target.value
+    });
+  };
   render() {
-    console.log(this.state.friends);
     return (
-      <div>
-        <div>
-          {this.state.friends &&
-            this.state.friends.map(friend => {
-              return (
-                <div key={friend.name}>
-                  <div>Name: {friend.name}</div>
-                  <div>Age: {friend.age}</div>
-                  <div>Email: {friend.email}</div>
-                </div>
-              );
-            })}
-
-          {!this.state.friends && <div>Loading friends...</div>}
-        </div>
-      </div>
+      <>
+        {this.state.friends &&
+          this.state.friends.map(e => {
+            return (
+              <div key={e.id}>
+                {e.name}, {e.age}, {e.email}
+              </div>
+            );
+          })}
+        <form action="submit">
+          <input type="text" onChange={this.name} value={this.state.name} placeholder="Name" />
+          <input type="number" onChange={this.age} value={this.state.age} placeholder="Age" />
+          <input type="email" onChange={this.email} value={this.state.email} placeholder="Email" />
+          <button onClick={this.submit} onSubmit={this.submit}>
+            Submit
+          </button>
+        </form>
+      </>
     );
   }
 }
-
-Friends.propTypes = {
-  friends: PropTypes.shape({
-    id: PropTypes.number,
-    name: PropTypes.string,
-    age: PropTypes.number,
-    email: PropTypes.string
-  })
-};
